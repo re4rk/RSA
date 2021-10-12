@@ -11,3 +11,6 @@ BigNumber.o: BigNumber.c
 
 clean :
 	rm -rf ./*.o app.out
+
+ran :
+	rm -rf  ./rand*
