@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "bignumber.h": "c",
+        "typedef.h": "c",
+        "__locale": "c"
+    }
+}
