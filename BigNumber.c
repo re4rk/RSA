@@ -5,6 +5,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+time_t zxc =0;
 void Gen_BigNum_File(SINT8 *filename ,SINT32 bytes,SINT32 num){
   FILE* pFile = fopen(filename, "wb");
   char contents[MAX_DATA_SIZE+2];
@@ -15,9 +16,8 @@ void Gen_BigNum_File(SINT8 *filename ,SINT32 bytes,SINT32 num){
   printf("bytes : %d\n", bytes);
   printf("num : %d\n", num);
 #endif
-
-  srand(time(NULL));
   ////////
+  srand(time(NULL));
   rand();
   ///////
   for(int i=0;i<num;i++){
@@ -69,12 +69,15 @@ void Write_MPZ_File(SINT8 *filename, MPZ *MPZs,SINT32 bytes, SINT32 num){
   
 }
 
-int BigNum_Add(MPZ *first, MPZ *second, MPZ *result){
+int MPZ_UADD(MPZ *first, MPZ *second, MPZ *result){
+  int carry = 0;
   for(int i=0;i<first->len;i++){
-    result->data[i] += first->data[i]+second->data[i];
-    if(first->data[i]+second->data[i] < first->data[i])
-      if(i == first->len -1 ) result->data[i+1]++;
-  } 
+    result->data[i] = first->data[i] + second->data[i] + carry;
+    if(result->data[i] < first->data[i] + carry)
+      carry = 1;
+    else
+      carry = 0;
+  }
 #if CONFIG_DEBUG
     for(int i=first->len-1; 0<=i ; i--)
       printf("%0.8x",result->data[i]);
@@ -82,17 +85,75 @@ int BigNum_Add(MPZ *first, MPZ *second, MPZ *result){
 #endif
   return 0;
 }
-int BigNum_Sub(MPZ *first, MPZ *second, MPZ *result){
-  for(int i=0;i<first->len;i++){
-    result->data[i] += first->data[i]-second->data[i];
-    if(first->data[i] < first->data[i]+second->data[i])
-      if(i == first->len -1 ) result->data[i+1]--;
-  } 
+
+int MPZ_ADD(MPZ *first, MPZ *second, MPZ *result){
+  if(first->sign && second->sign){
+    MPZ_UADD(first,second,result);
+    result->sign = 1;
+  }else if(first->sign == 0 && second->sign == 0){
+    MPZ_UADD(first,second,result);
+    result->sign = 0;
+  }else if(first->sign == 0 && second){
+    MPZ_USUB(first,second,result);
+  }else if(first->sign && second == 0){
+    MPZ_UADD(first,second,result);
+  }
+  return 0;
+}
+
+// 0 + 0 + 0 = 0
+// 0
+// 0 + 9 + 0 = 9
+// 0 + 9 + 1 = 0
+// 9 + 0 + 0 = 9
+// 9 + 0 + 1 = 0
+// 9 + 0 + 1 =
+
+
+int MPZ_USUB(MPZ *first, MPZ *second, MPZ *result){
+  int carry = 0;
+  int i = 0;
+  int max = first->len > second->len ? first->len : second->len;
+  int min = first->len > second->len ? second->len : first->len;
+
+  for(i=0;i<min;i++){
+    result->data[i] = first->data[i] - second->data[i] + carry;
+    if(first->data[i] + carry < result->data[i])
+      carry = -1;
+    else
+      carry = 0;
+  }
+  for(;i<max;i++){
+    result->data[i] = first->data[i] - second->data[i] + carry;
+    if(first->data[i]  + carry < result->data[i])
+      carry = -1;
+    else
+      carry = 0;
+  }
+  
+  for(i=max; 0<=i && result->data[i] == 0;i--);
+
+  result->len = i+1;
 #if CONFIG_DEBUG
     for(int i=first->len-1; 0<=i ; i--)
       printf("%0.8x",result->data[i]);
     printf("\n");
 #endif
+  return 0;
+}
+
+int MPZ_SUB(MPZ *first, MPZ *second, MPZ *result){
+  if(first->sign && second->sign){
+    MPZ_USUB(first,second,result);
+  }else if(first->sign == 0 && second->sign == 0){
+    MPZ_USUB(first,second,result);
+  }else if(first->sign == 0 && second){
+    MPZ_UADD(first,second,result);
+    result->sign = 0;
+  }else if(first->sign && second == 0){
+    MPZ_UADD(first,second,result);
+    result->sign = 1;
+  }
   return 0;
 }
 
@@ -148,13 +209,18 @@ inline void BigNum_Block_Mul(UINT32 first,UINT32 second,UINT32 *result){
 }
 
 void BigNum_Mul(MPZ *first, MPZ *second,MPZ *result){
+  for(UINT32 i=0;i<result->len;i++)
+    result->data[i] = 0;
+
   for(UINT32 i=0;i<first->len;i++)
-    for(UINT32 j=0;j<first->len;j++)
+    for(UINT32 j=0;j<second->len;j++)
       BigNum_Block_Mul(first->data[i],second->data[j],&result->data[i+j]);
+  return;
 }
 
 void BigNum_Mul2(MPZ *first, MPZ *second,MPZ *result){
   for(UINT32 i=0;i<first->len*2;i++)
     for(UINT32 j=0;j<=i;j++)
       BigNum_Block_Mul(first->data[i-j],second->data[j],&result->data[i]);
+  return;
 }
