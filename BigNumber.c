@@ -5,7 +5,20 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+
 time_t zxc =0;
+
+MPZ * initMPZs(int bytes,int num){
+    MPZ * temp = (MPZ*)malloc(sizeof(MPZ)*num);
+    for(int i=0;i<num;i++){
+        temp[i].sign = 0;
+        //temp[i].data = (UINT32*)malloc(bytes+1);
+        temp[i].data = (UINT32*)calloc(bytes+1,sizeof(UINT32));
+        temp[i].len = bytes/8;
+    }
+    return temp;
+}
+
 void Gen_BigNum_File(SINT8 *filename ,SINT32 bytes,SINT32 num){
   FILE* pFile = fopen(filename, "wb");
   char contents[MAX_DATA_SIZE+2];

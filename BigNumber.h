@@ -1,6 +1,8 @@
 #include"typedef.h"
 #pragma once
 
+MPZ * initMPZs(int bytes,int num);
+
 void Gen_BigNum_File(SINT8 *filename ,SINT32 bytes,SINT32 num);
 void Read_MPZ_FIle(SINT8 *filename ,MPZ *arr,SINT32 num);
 void Write_MPZ_File(SINT8 *filename, MPZ *MPZs,SINT32 bytes, SINT32 num);

@@ -1,7 +1,7 @@
 CC = gcc
 
-app.out: main.o BigNumber.o
-	${CC} -o app.out main.o BigNumber.o
+RSA: main.o BigNumber.o RSA_test.o
+	${CC} -o RSA.out main.o BigNumber.o RSA_test.o
 	
 main.o: main.c
 	${CC} -c -o main.o main.c
@@ -9,8 +9,11 @@ main.o: main.c
 BigNumber.o: BigNumber.c
 	${CC} -c -o BigNumber.o BigNumber.c
 
+RSA_test.o: RSA_test.c
+	${CC} -c -o RSA_test.o RSA_test.c
+
 clean :
-	rm -rf ./*.o app.out
+	rm -rf ./*.o RSA.out
 
 ran :
-	rm -rf  ./rand*
+	rm -rf  ./rand* 
