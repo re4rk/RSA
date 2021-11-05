@@ -7,6 +7,6 @@
 
 
 int main(void){
-    test_MUL();
+    test_SUB();
     return 0;
 }

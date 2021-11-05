@@ -5,7 +5,7 @@ asd = open('rand_large_python.txt','w')
 for i in range(10000):
     temp1 = int(MPZs1.readline(),16)
     temp2 = int(MPZs2.readline(),16)
-    temp = str(hex(temp1+temp2))[-2048:].replace('x','')
+    temp = str(hex(temp1-temp2)).split('0x')[1]
     asd.writelines(temp.rjust(2048, "0")+'\n')
 asd.close()
 

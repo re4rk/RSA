@@ -15,7 +15,9 @@ void BigNum_Block_Mul(UINT32 first,UINT32 second,UINT32 *result);
 void BigNum_Mul(MPZ *first, MPZ *second,MPZ *result);
 void BigNum_Mul2(MPZ *first, MPZ *second,MPZ *result);
 
-
-int BigNum_Compare(MPZ *first, MPZ *second);
+int Compare_MPZ(MPZ *first, MPZ *second);
 int BigNum_Swap(MPZ *first, MPZ *second);
 int BigNum_Sort(MPZ *MPZs,int size);
+void COPY_MPZ(MPZ *r,MPZ *a);
+void MPZ_BIT_SHIFT(MPZ *r, MPZ *a, SINT32 shift);
+void MPZ_UDIV(MPZ *first, MPZ *secon,MPZ *a, MPZ *b);
