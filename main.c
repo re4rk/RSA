@@ -5,7 +5,6 @@
 #include"typedef.h"
 #include"RSA_test.h"
 
-
 int main(void){
     test_SUB();
     return 0;

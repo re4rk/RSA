@@ -13,7 +13,7 @@ typedef unsigned char UINT8;
 typedef char SINT8;
 
 #define COUNT 10000
-#define DATA_SIZE 2048
+#define DATA_SIZE 128
 #define MAX_DATA_SIZE 4097
 typedef struct {
     SINT8 sign;

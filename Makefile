@@ -2,6 +2,7 @@ CC = gcc
 
 RSA: main.o BigNumber.o RSA_test.o
 	${CC} -o RSA.out main.o BigNumber.o RSA_test.o
+	rm -rf ./*.o
 	
 main.o: main.c
 	${CC} -c -o main.o main.c

@@ -64,15 +64,23 @@ void Write_MPZ_File(SINT8 *filename, MPZ *MPZs,SINT32 bytes, SINT32 num){
 }
 
 int MPZ_UADD(MPZ *first, MPZ *second, MPZ *result){
-  int carry = 0;
+  int overflow = 0;
+  MPZ * longer_MPZ = first->len > second->len ? first : second;
   int max = first->len > second->len ? first->len : second->len;
   int min = first->len > second->len ? second->len : first->len;
-  for(int i=0;i<first->len;i++){
-    result->data[i] = first->data[i] + second->data[i] + carry;
-    if(result->data[i] < first->data[i] + carry)
-      carry = 1;
-    else
-      carry = 0;
+
+  for(int i=0;i<min;i++){
+    result->data[i] = first->data[i] + second->data[i] + overflow;
+
+    if(result->data[i] < first->data[i] + overflow) overflow = 1;
+    else overflow = 0;
+  }
+
+  for(int i=min;i<max;i++){
+    result->data[i] = longer_MPZ->data[i] + overflow;
+
+    if(overflow == 1 && result->data[i] == 0) overflow = 1;
+    else overflow = 0;
   }
 
   return 0;
@@ -94,18 +102,49 @@ int MPZ_ADD(MPZ *first, MPZ *second, MPZ *result){
 }
 
 int MPZ_USUB(MPZ *first, MPZ *second, MPZ *result){
-  int carry = 0;
+  int underflow = 0;
   int i = 0;
+
   int max = first->len > second->len ? first->len : second->len;
   int min = first->len > second->len ? second->len : first->len;
 
-  for(i=0;i<max;i++){
-    result->data[i] = first->data[i] - second->data[i] + carry;
-    if(first->data[i] + carry < result->data[i])
-      carry = -1;
+  for(i=0;i<min;i++){
+    result->data[i] = first->data[i] - second->data[i] + underflow;
+    if(first->data[i] + underflow < result->data[i])
+      underflow = -1;
     else
-      carry = 0;
+      underflow = 0;
   }
+  
+  if(max == first->len){
+    for(i=min;i<max;i++){
+      result->data[i] = first->data[i] + underflow;
+
+      if(underflow == -1 && result->data[i] == 0) underflow = -1;
+      else underflow = 0;
+    }
+  }else{
+    for(i=min;i<max;i++){
+      result->data[i] = -second->data[i] + underflow;
+
+      if(underflow == -1 && result->data[i] == 0) underflow = -1;
+      else underflow = 0;
+    }
+  }
+
+  if(underflow){
+    for(i=0;i<max;i++)
+      result->data[i] ^= 0xffffffff;
+
+    result->data[0]++;
+    for(i=0;i<max;i++){
+      if(result->data[i] == 0)
+        result->data[i+1]++;
+      else break;
+    }
+    result->sign = 1;
+  }
+
   return 0;
 }
 
@@ -299,13 +338,14 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
       x2 = y_ >> 32;
       if(x2 > x->data[i])
         q->data[i-y->len]--;
-      else if (x2 == x->data[i]){
-        if(x>x->data[i-1])
-          q->data[i-y->len]--;
-        else if(x1 == -x->data[i-1]);
-          if(x>x->data[i-2]){
-            q->data[1-y->len]--;
-          }
-      }
+      // else if (x2 == x->data[i]){
+      //   if(x>x->data[i-1])
+      //     q->data[i-y->len]--;
+      //   else if(x1 == -x->data[i-1]);
+      //     if(x>x->data[i-2]){
+      //       q->data[1-y->len]--;
+      //     }
+      // }
     }
+  }
 }
