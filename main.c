@@ -6,6 +6,7 @@
 #include"RSA_test.h"
 
 int main(void){
-    test_SUB();
+    //test_SUB();
+    test_DIV();
     return 0;
 }

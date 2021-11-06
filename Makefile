@@ -17,4 +17,4 @@ clean :
 	rm -rf ./*.o RSA.out
 
 ran :
-	rm -rf  ./rand* 
+	rm -rf  ./*.txt

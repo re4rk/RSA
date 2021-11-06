@@ -11,8 +11,7 @@ void test_MUL(){
     int num = COUNT;
     MPZ* MPZs1 = initMPZs(bytes,num);
     MPZ* MPZs2 = initMPZs(bytes,num);
-    MPZ* large = initMPZs(bytes*2,num);
-    MPZ* large2 = initMPZs(bytes*2,num);
+    MPZ* large = initMPZs(bytes*2,num);;
     Gen_BigNum_File("rand_MPZs1w.txt",bytes,num);
     sleep(1);
     Gen_BigNum_File("rand_MPZs2w.txt",bytes,num);
@@ -29,7 +28,7 @@ void test_MUL(){
 
 }
 void test_ADD(){
-            int bytes = DATA_SIZE;
+    int bytes = DATA_SIZE;
     int num = COUNT;
     MPZ* MPZs1 = initMPZs(bytes,num);
     MPZ* MPZs2 = initMPZs(bytes,num);
@@ -52,7 +51,7 @@ void test_ADD(){
 }
 
 void test_SUB(){
-            int bytes = DATA_SIZE;
+    int bytes = DATA_SIZE;
     int num = COUNT;
     MPZ* MPZs1 = initMPZs(bytes,num);
     MPZ* MPZs2 = initMPZs(bytes,num);
@@ -72,4 +71,34 @@ void test_SUB(){
     clock_t end = clock();
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 
+}
+
+void test_DIV(){
+        int bytes = DATA_SIZE;
+    int num = COUNT;
+    MPZ* diva = initMPZs(bytes,num);
+    MPZ* divb = initMPZs(bytes,num);
+    MPZ* divc = initMPZs(bytes,num);
+    MPZ* result = initMPZs(bytes*2,num);
+    MPZ* q = initMPZs(bytes,num);
+    MPZ* r = initMPZs(bytes,num);
+    Gen_BigNum_File("div_a.txt",bytes,num);
+    sleep(2);
+    Gen_BigNum_File("div_b.txt",bytes,num);
+    sleep(2);
+    Gen_BigNum_File("div_c.txt",bytes,num);
+    Read_MPZ_FIle("div_a.txt",diva, num);
+    Read_MPZ_FIle("div_b.txt",divb, num);
+    Read_MPZ_FIle("div_c.txt",divc, num);
+
+    clock_t start = clock();
+    for(int i=0;i<num;i++){
+        BigNum_Mul(&diva[i],&divb[i],&result[i]);
+        MPZ_UDIV(&q[i],&r[i],&result[i],&divc[i]);
+    }
+    Write_MPZ_File("rand_large.txt",result,bytes*2,num);
+    Write_MPZ_File("divvv.txt",q,bytes*2,num);
+
+    clock_t end = clock();
+    printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 }
