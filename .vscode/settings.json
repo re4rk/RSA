@@ -2,6 +2,14 @@
     "files.associations": {
         "bignumber.h": "c",
         "typedef.h": "c",
-        "__locale": "c"
-    }
+        "__locale": "c",
+        "rsa_test.h": "c"
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/Re4rk/Documents/crypto/RSA",
+            "binaryPath": "/Users/Re4rk/Documents/crypto/RSA/RSA.out",
+            "binaryArgs": []
+        }
+    ]
 }

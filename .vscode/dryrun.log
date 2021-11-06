@@ -1,0 +1,9 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/Re4rk/Documents/crypto/RSA'
+gcc -g -Wall -c -o obj/main.o src/main.c
+ 
+gcc -g -Wall -c -o obj/BigNumber.o src/BigNumber.c
+gcc -g -Wall -c -o obj/RSA_test.o src/RSA_test.c
+gcc -g -Wall -o RSA.out obj/main.o obj/BigNumber.o obj/RSA_test.o
+make: Leaving directory `/Users/Re4rk/Documents/crypto/RSA'
+ 

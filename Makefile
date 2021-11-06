@@ -1,20 +1,16 @@
-CC = gcc
+CC = gcc -g -Wall
 
 RSA: main.o BigNumber.o RSA_test.o
-	${CC} -o RSA.out main.o BigNumber.o RSA_test.o
-	rm -rf ./*.o
+	${CC} -o RSA.out obj/main.o obj/BigNumber.o obj/RSA_test.o
 	
-main.o: main.c
-	${CC} -c -o main.o main.c
+main.o: src/main.c
+	${CC} -c -o obj/main.o src/main.c
 
-BigNumber.o: BigNumber.c
-	${CC} -c -o BigNumber.o BigNumber.c
+BigNumber.o: src/BigNumber.c
+	${CC} -c -o obj/BigNumber.o src/BigNumber.c
 
-RSA_test.o: RSA_test.c
-	${CC} -c -o RSA_test.o RSA_test.c
+RSA_test.o: src/RSA_test.c
+	${CC} -c -o obj/RSA_test.o src/RSA_test.c
 
 clean :
-	rm -rf ./*.o RSA.out
-
-ran :
-	rm -rf  ./*.txt
+	rm -rf ./obj/* ./tmp/*

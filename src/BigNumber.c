@@ -1,10 +1,9 @@
-#include"typedef.h"
-#include"BigNumber.h"
-#include"Config.h"
 #include<time.h>
 #include<stdlib.h>
 #include<stdio.h>
-
+#include"include/typedef.h"
+#include"include/BigNumber.h"
+#include"include/Config.h"
 
 time_t zxc =0;
 
