@@ -333,7 +333,7 @@ void BIG_PRINT(MPZ *MPZs){
 
 // normalization
 void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
-	SINT32 i, normbits;
+	SINT32 i, normbits=0;
 	UINT32 x0, x1, x2;
 	UINT64 x_, y_;
   MPZ *x = initMPZs(DATA_SIZE,COUNT); 
@@ -366,13 +366,6 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
 			MPZ_USUB(x, tmp, x);
 		}
 		/// round 3
-
-      // printf("---------\n");
-      // BIG_PRINT(y);//debug
-      // BIG_PRINT(x);//debug
-      // BIG_PRINT(tmp);//debug
-      // BIG_PRINT(tmp2);//debug
-      // BIG_PRINT(q);
 		for (i = x->len - 1; y->len <= i; i--){
       /// round 3.1
 			if (x->dat[i] == y->dat[y->len - 1])
@@ -401,32 +394,20 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
       MPZ_WORD_SHIFT(tmp, y, x->len - y->len - 1);
       BigNum_Mul_with_single_block(q->dat[i - y->len], tmp,tmp2);
 
-      // printf("---------\n");
-      // BIG_PRINT(x);//debug
-      // BIG_PRINT(tmp2);//debug
-      // BIG_PRINT(tmp);//debug
-      // BIG_PRINT(q);
-
       MPZ_USUB(x, tmp2, x);
       /// round 3.4
-      // BIG_PRINT(x);//debug
       if(x->sign == 1){
         MPZ_ADD(x, tmp,x);
         q->dat[i - y->len]--;
         x->sign = 0;
       }
-      // BIG_PRINT(x);//debug
 		}
 	}
-  COPY_MPZ(r, x);
-  //printf("---------\n");
+  MPZ_BIT_SHIFT(r, x, -normbits);
   for(i=q->len-1;0<=i;i--){
     if(q->dat[i] != 0)
       break;
     q->len--;
   }
-  // BIG_PRINT(q);
-  // BIG_PRINT(r);//debug
-      
 }
 

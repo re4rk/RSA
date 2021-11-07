@@ -14,10 +14,16 @@ mul_result_python.close()
 
 mul_result_python = open(text_dir + 'mul_result_python.txt')
 mul_result = open(text_dir + 'mul_result.txt')
+
+catch = 0
 for i in range(COUNT):
     first = int(mul_result_python.readline().replace('L',''),16)
     second = int(mul_result.readline().replace('L',''),16)
     if(first != second):
         print(f'Mul[{i}] did not match.')
+        catch += 1
+
+if catch == 0:
+    print("Mul test pass!")
 mul_result_python.close()
 mul_result.close()
