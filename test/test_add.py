@@ -8,7 +8,7 @@ add_result_python = open(text_dir + 'add_result_python.txt','w')
 for i in range(COUNT):
     temp1 = int(add_a.readline(),16)
     temp2 = int(add_b.readline(),16)
-    temp = str(hex(temp1+temp2))[-BYTE:]
+    temp = str(hex(temp1+temp2))[-BYTE:].replace('x','')
     add_result_python.writelines(temp+'\n')
 add_result_python.close()
 
