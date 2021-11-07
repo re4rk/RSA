@@ -19,10 +19,13 @@ void test_MUL(){
     Read_MPZ_FIle("/Users/Re4rk/Documents/crypto/RSA/tmp/mul_b.txt",MPZs2, num);
 
     clock_t start = clock();
+    
     for(int i=0;i<num;i++)
         MPZ_MUL(&MPZs1[i],&MPZs2[i],&large[i]);
     Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/mul_result.txt",large,bytes*2,num);
+
     clock_t end = clock();
+
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 
     delMPZs(MPZs1, num);
@@ -42,11 +45,15 @@ void test_ADD(){
     Read_MPZ_FIle("/Users/Re4rk/Documents/crypto/RSA/tmp/add_b.txt",MPZs2, num);
 
     srand(time(NULL));
+
     clock_t start = clock();
+
     for(int i=0;i<num;i++)
         MPZ_UADD(&MPZs1[i],&MPZs2[i],&result[i]);
-    Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/add_result.txt",result,bytes,num);
+
     clock_t end = clock();
+
+    Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/add_result.txt",result,bytes,num);
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
     delMPZs(MPZs1, num);
     delMPZs(MPZs2, num);
@@ -67,12 +74,15 @@ void test_SUB(){
     Read_MPZ_FIle("/Users/Re4rk/Documents/crypto/RSA/tmp/sub_b.txt",MPZs2, num);
 
     srand(time(NULL));
+
     clock_t start = clock();
+
     for(int i=0;i<num;i++)
         MPZ_USUB(&MPZs1[i],&MPZs2[i],&result[i]);
 
-    Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/sub_result.txt",result,bytes,num);
     clock_t end = clock();
+
+    Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/sub_result.txt",result,bytes,num);
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 
     delMPZs(MPZs1, num);
@@ -101,7 +111,7 @@ void test_DIV(){
         MPZ_MUL(&diva[i],&divb[i],&result[i]);
 
     clock_t start = clock();
-    
+
     for(int i=0;i<num;i++)
         MPZ_UDIV(&q[i],&r[i],&result[i],&divc[i]);
 
