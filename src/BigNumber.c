@@ -392,11 +392,11 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
 			xx[2] = y_ >> 32;
 
       for(int m=2; 0<=m; m--){
-        if(xx[m] > x->dat[i+m-2]){
+        if(xx[m] == x->dat[i+m-2])
+          continue;
+        if(xx[m] > x->dat[i+m-2])
           q->dat[i - y->len]--;
-          break;
-        }else if(xx[m] < x->dat[i+m-2])
-          break;
+        break;
       }
       /// round 3.3
       MPZ_WORD_SHIFT(tmp, y, x->len - y->len - 1);
