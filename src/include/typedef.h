@@ -12,8 +12,8 @@ typedef short SINT16;
 typedef unsigned char UINT8;
 typedef char SINT8;
 
-#define COUNT 1
-#define DATA_SIZE 128
+#define COUNT 100
+#define DATA_SIZE 2048
 #define MAX_DATA_SIZE 4097
 typedef struct {
     SINT8 sign;

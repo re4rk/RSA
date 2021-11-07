@@ -23,3 +23,5 @@ void MPZ_BIT_SHIFT(MPZ *r, MPZ *a, SINT32 shift);
 void MPZ_UDIV(MPZ *first, MPZ *secon,MPZ *a, MPZ *b);
 
 void BigNum_Mul_with_single_block(UINT32 first, MPZ *second,MPZ *result);
+
+void BIG_PRINT(MPZ *);
