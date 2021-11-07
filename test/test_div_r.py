@@ -10,8 +10,8 @@ asd = open(text_dir+'div_r_python.txt','w')
 for i in range(COUNT):
     temp1 = int(div_q_before.readline(),16)
     temp2 = int(div_m.readline(),16)
-    temp = str(hex(temp1%temp2)).split('0x')[1]
-    asd.writelines(temp.rjust(BYTE, "0")+'\n')
+    temp = str(hex(temp1%temp2))
+    asd.writelines(temp+'\n')
 asd.close()
 
 div_q_python = open(text_dir+'div_r_python.txt')

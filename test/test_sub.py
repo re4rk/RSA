@@ -9,7 +9,7 @@ for i in range(COUNT):
     temp1 = int(sub_a.readline(),16)
     temp2 = int(sub_b.readline(),16)
     temp = str(hex(temp1-temp2))
-    sub_result_python.writelines(temp.rjust(BYTE, "0")+'\n')
+    sub_result_python.writelines(temp+'\n')
 sub_result_python.close()
 
 sub_result_python = open(text_dir + 'sub_result_python.txt')

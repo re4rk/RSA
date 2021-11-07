@@ -9,7 +9,7 @@ for i in range(COUNT):
     temp1 = int(mul_a.readline(),16)
     temp2 = int(mul_b.readline(),16)
     temp = str(hex(temp1*temp2))
-    mul_result_python.writelines(temp.rjust(BYTE, "0")+'\n')
+    mul_result_python.writelines(temp+'\n')
 mul_result_python.close()
 
 mul_result_python = open(text_dir + 'mul_result_python.txt')
