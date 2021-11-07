@@ -116,10 +116,8 @@ int MPZ_USUB(MPZ *first, MPZ *second, MPZ *result){
     for(i=0;i<min;i++){
       temp = first->dat[i];
       result->dat[i] = first->dat[i] - second->dat[i] + underflow;
-      if(temp + underflow < result->dat[i])
-        underflow = -1;
-      else
-        underflow = 0;
+      if(temp + underflow < result->dat[i]) underflow = -1;
+      else underflow = 0;
     }
     
     if(max == first->len){
@@ -137,14 +135,15 @@ int MPZ_USUB(MPZ *first, MPZ *second, MPZ *result){
         else underflow = 0;
       }
     }
-  }else{
+  }
+  else{
+    result->sign = 1;
+
     for(i=0;i<min;i++){
       temp = second->dat[i];
       result->dat[i] = second->dat[i] - first->dat[i] + underflow;
-      if(temp + underflow < result->dat[i])
-        underflow = -1;
-      else
-        underflow = 0;
+      if(temp + underflow < result->dat[i]) underflow = -1;
+      else underflow = 0;
     }
     
     if(max == second->len){
@@ -162,21 +161,7 @@ int MPZ_USUB(MPZ *first, MPZ *second, MPZ *result){
         else underflow = 0;
       }
     }
-
-    result->sign = 1;
   }
-  // if(underflow){
-  //   for(i=0;i<max;i++)
-  //     result->dat[i] ^= 0xffffffff;
-
-  //   result->dat[0]++;
-  //   for(i=0;i<max;i++){
-  //     if(result->dat[i] == 0)
-  //       result->dat[i+1]++;
-  //     else break;
-  //   }
-  //   result->sign = 1;
-  // }
 
   for(i=max-1;0<=i;i--){
     if(result->dat[i] != 0)

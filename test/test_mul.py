@@ -1,19 +1,23 @@
-MPZs1 = open('rand_MPZs1w.txt')
-MPZs2 = open('rand_MPZs2w.txt')
-asd = open('rand_large_python.txt','w')
+COUNT = 100
+BYTE = 2048
+text_dir = "tmp/"
+mul_a = open(text_dir + 'mul_a.txt')
+mul_b = open(text_dir + 'mul_b.txt')
+mul_result_python = open(text_dir + 'mul_result_python.txt','w')
 
-for i in range(10000):
-    temp = str(hex(int(MPZs1.readline(),16)*int(MPZs2.readline(),16)))[2:]
-    asd.writelines(temp.rjust(4096, "0")+'\n')
-asd.close()
+for i in range(COUNT):
+    temp1 = int(mul_a.readline(),16)
+    temp2 = int(mul_b.readline(),16)
+    temp = str(hex(temp1*temp2))
+    mul_result_python.writelines(temp.rjust(BYTE, "0")+'\n')
+mul_result_python.close()
 
-pypy = open('rand_large_python.txt')
-cc = open('rand_large.txt')
-#print("\npypy vs cc")
-for i in range(10000):
-    first = pypy.readline()
-    second = cc.readline()
+mul_result_python = open(text_dir + 'mul_result_python.txt')
+mul_result = open(text_dir + 'mul_result.txt')
+for i in range(COUNT):
+    first = int(mul_result_python.readline().replace('L',''),16)
+    second = int(mul_result.readline().replace('L',''),16)
     if(first != second):
-        print(i,end=" ")
-pypy.close()
-cc.close()
+        print(f'Mul[{i}] did not match.')
+mul_result_python.close()
+mul_result.close()

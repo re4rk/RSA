@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
  
 
-# Make data base, printed on Sun Nov  7 02:43:52 2021
+# Make data base, printed on Sun Nov  7 23:24:34 2021
 
 # Variables
 
@@ -37,13 +37,13 @@ _ = /usr/bin/make
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # environment
- 
 VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 P9K_SSH = 0
 # environment
+ 
 VSCODE_IPC_HOOK_EXTHOST = /var/folders/kh/sfw9ly3x0879clb8zqwbw1h00000gp/T/vscode-ipc-b27fb7c3-de86-4813-91b9-b4b981e5add7.sock
 # environment
 VSCODE_CWD = /
@@ -65,6 +65,8 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.dkLbGvbUPY/Listeners
 VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /Users/Re4rk/Documents/crypto/RSA
+# makefile (from `Makefile', line 3)
+src = src/
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
@@ -85,6 +87,8 @@ ZSH = /Users/Re4rk/.oh-my-zsh
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
+# makefile (from `Makefile', line 2)
+obj = obj/
 # environment
 XPC_FLAGS = 0x0
 # default
@@ -152,7 +156,7 @@ LANG = C
 # environment
 VSCODE_PID = 37322
 # variable set hash-table stats:
-# Load=68/1024=7%, Rehash=0, Collisions=1/92=1%
+# Load=70/1024=7%, Rehash=0, Collisions=1/94=1%
 
 # Pattern-specific Variable Values
 
@@ -160,9 +164,9 @@ VSCODE_PID = 37322
 
 # Directories
 
-# . (device 16777223, inode 2991743): 10 files, no impossibilities.
+# . (device 16777223, inode 2991743): 9 files, no impossibilities.
 
-# 10 files, no impossibilities in 1 directories.
+# 9 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -188,9 +192,8 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-11-07 02:43:33
+#  Last modified 2021-11-07 23:23:27
 #  File has been updated.
- 
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
@@ -217,11 +220,12 @@ BigNumber.o: src/BigNumber.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 10):
-	${CC} -c -o obj/BigNumber.o src/BigNumber.c
+#  commands to execute (from `Makefile', line 11):
+	${CC} -c -o ${obj}BigNumber.o $(src)BigNumber.c
 	
 
 # Not a target:
+ 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -231,15 +235,15 @@ RSA_test.o: src/RSA_test.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 13):
-	${CC} -c -o obj/RSA_test.o src/RSA_test.c
+#  commands to execute (from `Makefile', line 14):
+	${CC} -c -o ${obj}RSA_test.o $(src)RSA_test.c
 	
 
 clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 16):
+#  commands to execute (from `Makefile', line 17):
 	rm -rf ./obj/* ./tmp/*
 	
 
@@ -247,16 +251,16 @@ main.o: src/main.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 7):
-	${CC} -c -o obj/main.o src/main.c
+#  commands to execute (from `Makefile', line 8):
+	${CC} -c -o ${obj}main.o $(src)main.c
 	
 
 RSA: main.o BigNumber.o RSA_test.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 4):
-	${CC} -o RSA.out obj/main.o obj/BigNumber.o obj/RSA_test.o
+#  commands to execute (from `Makefile', line 5):
+	${CC} -o RSA.out ${obj}main.o ${obj}BigNumber.o ${obj}RSA_test.o
 	
 
 # files hash-table stats:
@@ -272,6 +276,6 @@ RSA: main.o BigNumber.o RSA_test.o
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sun Nov  7 02:43:52 2021
+# Finished Make data base on Sun Nov  7 23:24:34 2021
 
  
