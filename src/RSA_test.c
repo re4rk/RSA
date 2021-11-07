@@ -7,11 +7,11 @@
 
 
 void test_MUL(){
-        int bytes = DATA_SIZE;
+    int bytes = DATA_SIZE;
     int num = COUNT;
-    MPZ* MPZs1 = initMPZs(bytes,num);
-    MPZ* MPZs2 = initMPZs(bytes,num);
-    MPZ* large = initMPZs(bytes*2,num);;
+    MPZ* MPZs1 = newMPZs(bytes,num);
+    MPZ* MPZs2 = newMPZs(bytes,num);
+    MPZ* large = newMPZs(bytes*2,num);;
 
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/mul_a.txt",bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/mul_b.txt",bytes,num);
@@ -20,19 +20,21 @@ void test_MUL(){
 
     clock_t start = clock();
     for(int i=0;i<num;i++)
-        BigNum_Mul(&MPZs1[i],&MPZs2[i],&large[i]);
+        MPZ_MUL(&MPZs1[i],&MPZs2[i],&large[i]);
     Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/mul_result.txt",large,bytes*2,num);
     clock_t end = clock();
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 
-
+    delMPZs(MPZs1, num);
+    delMPZs(MPZs2, num);
+    delMPZs(large, num);
 }
 void test_ADD(){
     int bytes = DATA_SIZE;
     int num = COUNT;
-    MPZ* MPZs1 = initMPZs(bytes,num);
-    MPZ* MPZs2 = initMPZs(bytes,num);
-    MPZ* result = initMPZs(bytes,num);
+    MPZ* MPZs1 = newMPZs(bytes,num);
+    MPZ* MPZs2 = newMPZs(bytes,num);
+    MPZ* result = newMPZs(bytes,num);
 
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/add_a.txt",bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/add_b.txt",bytes,num);
@@ -46,15 +48,18 @@ void test_ADD(){
     Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/add_result.txt",result,bytes,num);
     clock_t end = clock();
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
+    delMPZs(MPZs1, num);
+    delMPZs(MPZs2, num);
+    delMPZs(result, num);
 
 }
 
 void test_SUB(){
     int bytes = DATA_SIZE;
     int num = COUNT;
-    MPZ* MPZs1 = initMPZs(bytes,num);
-    MPZ* MPZs2 = initMPZs(bytes,num);
-    MPZ* result = initMPZs(bytes,num);
+    MPZ* MPZs1 = newMPZs(bytes,num);
+    MPZ* MPZs2 = newMPZs(bytes,num);
+    MPZ* result = newMPZs(bytes,num);
 
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/sub_a.txt",bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/sub_b.txt",bytes,num);
@@ -70,17 +75,21 @@ void test_SUB(){
     clock_t end = clock();
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
 
+    delMPZs(MPZs1, num);
+    delMPZs(MPZs2, num);
+    delMPZs(result, num);
+
 }
 
 void test_DIV(){
         int bytes = DATA_SIZE;
     int num = COUNT;
-    MPZ* diva = initMPZs(bytes,num);
-    MPZ* divb = initMPZs(bytes,num);
-    MPZ* divc = initMPZs(bytes,num);
-    MPZ* result = initMPZs(bytes*2,num);
-    MPZ* q = initMPZs(bytes,num);
-    MPZ* r = initMPZs(bytes,num);
+    MPZ* diva = newMPZs(bytes,num);
+    MPZ* divb = newMPZs(bytes,num);
+    MPZ* divc = newMPZs(bytes,num);
+    MPZ* result = newMPZs(bytes*2,num);
+    MPZ* q = newMPZs(bytes,num);
+    MPZ* r = newMPZs(bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/div_a.txt",bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/div_b.txt",bytes,num);
     Gen_BigNum_File("/Users/Re4rk/Documents/crypto/RSA/tmp/div_m.txt",bytes,num);
@@ -90,7 +99,7 @@ void test_DIV(){
 
     clock_t start = clock();
     for(int i=0;i<num;i++){
-        BigNum_Mul(&diva[i],&divb[i],&result[i]);
+        MPZ_MUL(&diva[i],&divb[i],&result[i]);
         MPZ_UDIV(&q[i],&r[i],&result[i],&divc[i]);
     }
 
@@ -99,4 +108,11 @@ void test_DIV(){
     Write_MPZ_File("/Users/Re4rk/Documents/crypto/RSA/tmp/div_r.txt",r,bytes,num);
     clock_t end = clock();
     printf("Time: %lf\n", (double)(end - start)/CLOCKS_PER_SEC);
+
+    delMPZs(diva, num);
+    delMPZs(divb, num);
+    delMPZs(divc, num);
+    delMPZs(result, num);
+    delMPZs(q, num);
+    delMPZs(r, num);
 }

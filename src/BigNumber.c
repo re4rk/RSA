@@ -7,7 +7,7 @@
 
 time_t zxc =0;
 
-MPZ * initMPZs(int bytes,int num){
+MPZ * newMPZs(int bytes,int num){
     MPZ * temp = (MPZ*)malloc(sizeof(MPZ)*num);
     for(int i=0;i<num;i++){
         temp[i].sign = 0;
@@ -15,6 +15,26 @@ MPZ * initMPZs(int bytes,int num){
         temp[i].len = bytes/8;
     }
     return temp;
+}
+
+MPZ * newMPZ(int bytes){
+    MPZ * temp = (MPZ*)malloc(sizeof(MPZ));
+    temp->sign = 0;
+    temp->dat = (UINT32*)calloc(MAX_DATA_SIZE,sizeof(UINT32));
+    temp->len = bytes/8;
+    return temp;
+}
+
+void delMPZs(MPZ *temp,int num){
+  for(int i=0;i<num;i++){
+      free(temp[i].dat);
+  }
+  free(temp);
+}
+
+void delMPZ(MPZ *temp){
+  free(temp->dat);
+  free(temp);
 }
 
 int forRand=0;
@@ -35,19 +55,20 @@ void Gen_BigNum_File(SINT8 *filename ,SINT32 bytes,SINT32 num){
 }
 
 void Read_MPZ_FIle(SINT8 *filename ,MPZ *MPZs,SINT32 num){
-  FILE* pFIle = fopen(filename, "rb");
+  FILE* pFile = fopen(filename, "rb");
   char str_prime[MAX_DATA_SIZE+1];
   MPZ * ptr_MPZ;
 
   for(int m=0;m<num;m++){
     ptr_MPZ = &MPZs[m];
-    fgets(str_prime,ptr_MPZ->len*8+1,pFIle);
-    fgetc(pFIle);
+    fgets(str_prime,ptr_MPZ->len*8+1,pFile);
+    fgetc(pFile);
     for(int i=ptr_MPZ->len; 0<i ; i--){
       ptr_MPZ->dat[ptr_MPZ->len-i] = (int)strtol(&str_prime[i*8-8],NULL, 16);
       str_prime[i*8-8] = '\0';
     }
   }
+  fclose(pFile);
 }
 
 void Write_MPZ_File(SINT8 *filename, MPZ *MPZs,SINT32 bytes, SINT32 num){
@@ -61,7 +82,6 @@ void Write_MPZ_File(SINT8 *filename, MPZ *MPZs,SINT32 bytes, SINT32 num){
     fwrite(contents, 1, len*8+1, pFile);
   }
   fclose(pFile);
-  
 }
 
 int MPZ_UADD(MPZ *first, MPZ *second, MPZ *result){
@@ -210,7 +230,7 @@ int Compare_MPZ(MPZ *first, MPZ *second){
   return 1;
 }
 
-int BigNum_Swap(MPZ *first, MPZ *second){
+int MPZ_Swap(MPZ *first, MPZ *second){
   first->sign ^= second->sign ^=first->sign ^= second->sign;
   first->len ^= second->len ^= first->len ^= second->len;
 
@@ -221,15 +241,15 @@ int BigNum_Swap(MPZ *first, MPZ *second){
   return 0;
 }
 
-int BigNum_Sort(MPZ *MPZs,int size){
+int MPZ_Sort(MPZ *MPZs,int size){
   for(int i=0;i<size-1;i++)
     for(int j=i+1;j<size;j++)
-      if(Compare_MPZ(&MPZs[i],&MPZs[j]) == -1)
-        BigNum_Swap(&MPZs[i],&MPZs[j]);
+      if(Compare_MPZ(&MPZs[i],&MPZs[j]) == 1)
+        MPZ_Swap(&MPZs[i],&MPZs[j]);
   return 0;
 }
 
-inline void BigNum_Block_Mul(UINT32 first,UINT32 second,UINT32 *result){
+inline void MPZ_MUL_BLOCK(UINT32 first,UINT32 second,UINT32 *result){
   UINT64 temp = (UINT64)first * (UINT64)second;
   if((result[0]+=(UINT32)temp) < (UINT32)temp)
     result[1]+=1;
@@ -243,22 +263,22 @@ inline void BigNum_Block_Mul(UINT32 first,UINT32 second,UINT32 *result){
   }
 }
 
-void BigNum_Mul(MPZ *first, MPZ *second,MPZ *result){
+void MPZ_MUL(MPZ *first, MPZ *second,MPZ *result){
   for(UINT32 i=0;i<result->len;i++)
     result->dat[i] = 0;
 
   for(UINT32 i=0;i<first->len;i++)
     for(UINT32 j=0;j<second->len;j++)
-      BigNum_Block_Mul(first->dat[i],second->dat[j],&result->dat[i+j]);
+      MPZ_MUL_BLOCK(first->dat[i],second->dat[j],&result->dat[i+j]);
   return;
 }
 
-void BigNum_Mul_with_single_block(UINT32 first, MPZ *second,MPZ *result){
+void MPZ_MUL_with_single_block(UINT32 first, MPZ *second,MPZ *result){
   for(UINT32 i=0;i<result->len;i++)
     result->dat[i] = 0;
 
   for(UINT32 i=0;i<second->len;i++)
-    BigNum_Block_Mul(first,second->dat[i],&result->dat[i]);
+    MPZ_MUL_BLOCK(first,second->dat[i],&result->dat[i]);
     
   for(UINT32 i=second->len ; 0<=i; i--)
     if(result->dat[i] != 0){
@@ -309,8 +329,7 @@ void MPZ_BIT_SHIFT(MPZ *r, MPZ *a, SINT32 shift){
 	}
 }
 
-void MPZ_WORD_SHIFT(MPZ* r, MPZ* a, SINT32 shift) //if shift>=0, left shift. Else, right shift
-{
+void MPZ_WORD_SHIFT(MPZ* r, MPZ* a, SINT32 shift){
   r->len = a->len + shift;
   if(r->len == 0){
     r->sign = 0;
@@ -330,18 +349,17 @@ void BIG_PRINT(MPZ *MPZs){
   printf(" [%d][%d]\n",MPZs->len,MPZs->sign);
 }
 
-
 // normalization
 void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
 	SINT32 i, normbits=0;
 	UINT32 x0, x1, x2;
 	UINT64 x_, y_;
-  MPZ *x = initMPZs(DATA_SIZE,COUNT); 
-  MPZ *y = initMPZs(DATA_SIZE,COUNT);
-  MPZ *tmp = initMPZs(DATA_SIZE,COUNT);
-  MPZ *tmp2 = initMPZs(DATA_SIZE,COUNT);
+  MPZ *x = newMPZ(DATA_SIZE); 
+  MPZ *y = newMPZ(DATA_SIZE);
+  MPZ *tmp = newMPZ(DATA_SIZE);
+  MPZ *tmp2 = newMPZ(DATA_SIZE);
 
-	if (Compare_MPZ(a, b) == 0){
+	if (0){
 		q->len = 0;
 		q->sign = 0;
 		COPY_MPZ(r, a);
@@ -363,7 +381,7 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
     MPZ_WORD_SHIFT(tmp, y, x->len - y->len);
 		if (Compare_MPZ(x, tmp) == 1){
 			q->dat[x->len - y->len]++;
-			MPZ_USUB(x, tmp, x);
+			MPZ_SUB(x, tmp, x);
 		}
 		/// round 3
 		for (i = x->len - 1; y->len <= i; i--){
@@ -392,9 +410,9 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
 			}
       /// round 3.3
       MPZ_WORD_SHIFT(tmp, y, x->len - y->len - 1);
-      BigNum_Mul_with_single_block(q->dat[i - y->len], tmp,tmp2);
+      MPZ_MUL_with_single_block(q->dat[i - y->len], tmp,tmp2);
 
-      MPZ_USUB(x, tmp2, x);
+      MPZ_SUB(x, tmp2, x);
       /// round 3.4
       if(x->sign == 1){
         MPZ_ADD(x, tmp,x);
@@ -409,5 +427,10 @@ void MPZ_UDIV(MPZ *q, MPZ *r,MPZ *a, MPZ *b){
       break;
     q->len--;
   }
+
+  delMPZ(x);
+  delMPZ(y);
+  delMPZ(tmp);
+  delMPZ(tmp2);
 }
 

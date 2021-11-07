@@ -8,8 +8,8 @@
 int main(void){
 
   test_ADD();
-   test_SUB();
+  test_SUB();
   test_MUL();
   test_DIV();
-    return 0;
+  return 0;
 }
